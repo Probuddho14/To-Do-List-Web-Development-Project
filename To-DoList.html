@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charser="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>HTML ToDo List | Major Project</title>
+        <link href="vendor/bootstrap/css/bootstrap.css" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-icons/1.11.1/font/bootstrap-icons.min.css" integrity="sha512-oAvZuuYVzkcTc2dH5z1ZJup5OmSQ000qlfRvuoTTiyTBjwX1faoyearj8KdMq0LgsBTHMrRuMek7s+CxF8yE+w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+        
+        <style>
+            
+            .bi-check-circle-fill{
+                color: green;
+                padding-right: 5px;
+                cursor: pointer;
+            }
+            .bi-pencil-square{
+                color: #2d5dbe;
+                padding-right: 5px;
+                cursor: pointer;
+            }
+            .bi-trash-fill{
+                color: red;
+                padding-left: 5px;
+                cursor: pointer;
+            }
+          
+            .bi-check-circle-fill:hover{
+                color: lightgreen;
+            }
+            .bi-pencil-square:hover{
+                color: #97b6f3;
+            }
+            .bi-star-fill:hover{
+                color: gold!important
+            }
+            .bi-trash-fill:hover{
+                color:rgb(240, 136, 136)
+            }
+            .left{
+                width: 50%; 
+                height: 100%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                background: rgb(228, 107, 107);
+                flex-direction: column;
+                font-size: 42px;
+                color:aliceblue;
+                border-top-left-radius: 20px;
+                border-bottom-left-radius: 20px;
+            }
+            .right{
+                width: 50%; 
+                height: 100%; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+                background:#97b6f3;
+                flex-direction: column;
+                font-size: 42px;
+                border-top-right-radius: 20px;
+                border-bottom-right-radius: 20px;
+            }
+            .modal-footer span{
+                font-size: 42px;
+                width: 50px;
+                display: inline-block;
+                text-align: center;
+                position: relative;
+            }
+            .modal-footer span::after{
+                font-size: 10px;
+                color:aliceblue;
+                position: absolute;
+                bottom: -8px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+            #hrs::after{
+                content: 'HOURS';
+            }
+            #min::after{
+                content: 'MINUTES';
+            }
+            #sec::after{
+                content: 'SECONDS'
+            }
+            .modal-header,.modal-footer{
+                background: linear-gradient(45deg, #153677, #4e0f58); 
+                color:aliceblue;
+            }
+            .modal-body{
+                background-color: antiquewhite;
+            }
+            #btn2:hover{
+                background-color: #78407f!important
+            }
+            #btn3:hover{
+                background-color: #85e03a!important
+            }
+            #btn1:hover{
+                background-color: rgb(255, 225, 0)!important;
+            }
+            #Inst:hover{
+                cursor: pointer;
+            }
+           
+            
+        
+        </style>
+    </head>
+    <body style="background: linear-gradient(135deg, #153677, #4e0f58); width: 100%; min-height: 100vh">
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a href="https://www.1stop.ai/" class="navbar-brand" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Visit 1stop">
+                    <img src="assets/logo.png" class="img-fluid" alt="logo" width="150">
+                </a>
+                <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar">
+                    <i class="bi bi-list"></i>
+                </button>
+                <div class="collapse navbar-collapse" id="navbar">
+                    <div class="navbar-nav ms-auto">
+                        <a class="nav-item nav-link active" id="Inst" data-bs-toggle="tooltip" data-bs-placement="bottom" title="To-Do List Instructions" onclick="showCarousel()">Instructions</a>
+                    </div>
+                </div>
+            </div>
+        </nav>
+        <h1 style="text-align: center; padding-top: 20px; color:antiquewhite">To-Do List</h1>
+        <div class="container" style="width: 100%; background: antiquewhite; margin: 50px auto 20px; padding: 40px 30px 70px; border-radius: 10px;">
+            <div class="mb-3" style="background-color: rgb(240, 69, 69); border-radius: 10px; height: 50px; padding: 6px 10px 5px">
+            
+            <button type="button" class="btn btn-primary" style="border-radius: 20px;" onclick="showAddTaskModal()">Add New Task</button>
+            <button type="button" class="btn btn-warning" id="btn1"style="border-radius: 20px;" onclick="clearAll()">Clear All Tasks</button>
+            <button type="button" class="btn" id="btn2" style="border-radius: 20px; background-color: #9b54a4; color: white" onclick="doneAll()">Mark All Done</button>
+            <button type="button" class="btn" id="btn3" style="border-radius: 20px; background-color: #76ca31; color: black" onclick="showCalendar()">Show Calendar</button>
+            
+        </div>
+            <div class="d-flex justify-content-center">
+            <div class="col-sm-12 col-md-12 col-lg-12">
+            <div class="card">
+                <div class="card-body">
+
+            <table class="table table-striped">
+                <thead class="text-center">
+                    <th>#</th>
+                    <th>Task Description</th>
+                    <th>Responsible Person</th>
+                    <th>Due Date&Time</th>
+                    <th>Actions</th>
+                </thead>
+                <tbody class="text-center" id="taskTableBody">
+                    
+                </tbody>
+            </table>
+            </div>
+            </div>
+            </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="addTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="addTaskModalLabel" aria-hidden="true">
+            <form id="taskInputForm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="addTaskModalLabel">Add Task</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: aliceblue;"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-1">
+                                <label for="addTaskTextArea" class="form-label">Task Description</label>
+                                <textarea class="form-control" id="addTaskTextArea" name="taskDescription" rows="3" placeholder="Add your Task Description"></textarea>
+                            </div>
+                            <div class="mb-1">
+                                <label for="addResponsiblePerson" class="form-label">Responsible Person</label>
+                                <input type="text" class="form-control" id="addResponsiblePerson" name="taskResponsiblePerson" placeholder="Add the Responsible Person's Name">
+                            </div>
+                            <div class="mb-1">
+                                <label for="addTaskResponsible" class="form-label">Due Date&Time</label>
+                                <input type="datetime-local" class="form-control" id="addETA" name="taskETA">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="addTask()">Add Task</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="modal fade" id="updateTaskModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="updateTaskModalLabel" aria-hidden="true">
+            <form id="taskUpdateForm">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="editTaskModalLabel">Edit Task</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: aliceblue;"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="mb-1">
+                                <label for="editTaskTextArea" class="form-label">Task Description</label>
+                                <textarea class="form-control" id="editTaskTextArea" name="taskDescription" rows="3" placeholder="Edit your Task Description"></textarea>
+                            </div>
+                            <div class="mb-1">
+                                <label for="addResponsiblePerson" class="form-label">Responsible Person</label>
+                                <input type="text" class="form-control" id="editResponsiblePerson" name="taskResponsiblePerson" placeholder="Edit the Responsible Person's Name">
+                            </div>
+                            <div class="mb-1">
+                                <label for="addTaskResponsible" class="form-label">Due Date&Time</label>
+                                <input type="datetime-local" class="form-control" id="editETA" name="taskETA">
+                            </div>
+                            <input type="hidden" id="editIndex" name="taskIndex">
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                            <button type="button" class="btn btn-primary" onclick="updateTask()">Update Task</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="modal fade" id="showCalendar" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="showCalendarLabel" aria-hidden="true">
+            <form id="Calendar">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="CalendarModalLabel">Calendar</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color: aliceblue;"></button>
+                        </div>
+                        <div class="modal-body" style="height: 250px; width: 100%; display:flex; align-items: center;">
+                            <div class="left">
+                            <p id="date"></p>
+                            <p id="day"></p>
+                            </div>
+                            <div class="right">
+                            <p id="mon"></p>
+                            <p id="year"></p>
+                            </div>
+                           
+                        </div>
+                        <div class="modal-footer" style="display: flex; justify-content: center;">
+                         <span id="hrs">00</span>  
+                         <span>:</span>
+                         <span id="min">00</span> 
+                         <span>:</span>
+                         <span id="sec">00</span>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+
+        <div class="modal modal-xl fade" id="showCarousel" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="showCarouselLabel" aria-hidden="true">
+            <form id="To-Do Instructions">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header" style="background: linear-gradient(45deg, #153677, #4e0f58); color:aliceblue;">
+                            <h5 class="modal-title" id="InstructionsModalLabel">To-Do Instructions</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="background-color:aliceblue"></button>
+                        </div>
+                        <div id="carousel" class="carousel slide" data-bvs-ride="carousel">
+                            <div class="carousel-indicators">
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="0" class="active"></button>
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="1"></button>
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="2"></button>
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="3"></button>
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="4"></button>
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="5"></button>
+                                <button type="button" data-bs-target="#carousel" data-bs-slide-to="6"></button>
+                            </div>
+                            <div class="carousel-inner">
+                                <div class="carousel-item active">
+                                    <img src="assets/pic1.png" height="300" class="d-block w-100" alt="Carousel 1" style="max-height: 100vh;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="assets/pic2.png" height="300" class="d-block w-100" alt="Carousel 2" style="max-height: 100vh;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="assets/pic3.png" height="300" class="d-block w-100" alt="Carousel 3" style="max-height: 100vh;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="assets/pic4.png" height="300" class="d-block w-100" alt="Carousel 4" style="max-height: 100vh;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="assets/pic5.png" height="300" class="d-block w-100" alt="Carousel 5" style="max-height: 100vh;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="assets/pic6.png" height="300" class="d-block w-100" alt="Carousel 6" style="max-height: 100vh;">
+                                </div>
+                                <div class="carousel-item">
+                                    <img src="assets/pic7.png" height="300" class="d-block w-100" alt="Carousel 7" style="max-height: 100vh;">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#carousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" style="border-radius: 40px; background-color: rgb(196, 164, 226);"></span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#carousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" style="border-radius: 40px; background-color: rgb(196, 164, 226);"></span>
+                            </button>
+                        </div>
+                        <div class="modal-footer" style="display: flex; justify-content: center; background: linear-gradient(45deg, #153677, #4e0f58); color: aliceblue;">
+                         
+                    </div>
+                </div>
+            </form>
+        </div>
+       
+
+        <script src="https://code.jquery.com/jquery-3.7.1.js" integrity="sha256-eKhayi8LEQwp4NKxN+CfCh+3qOVUtJn3QNZ0TciWLP4=" crossorigin="anonymous"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js" integrity="sha512-2rNj2KJ+D8s1ceNasTIex6z4HWyOnEYLVC3FigGOmyQCZc2eBXKgOxQmo3oKLHyfcj53uz4QMsRCWNbLd32Q1g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+        <script src="vendor/bootstrap/js/bootstrap.js"></script>
+    
+        <script>
+            
+            createHtmlfromStorage();
+            loader();
+            Calendar();
+            function showAddTaskModal(){
+                $("#addTaskModal").modal('show');
+            }
+            function showCalendar(){
+                $("#showCalendar").modal('show');
+            }
+
+            function showCarousel(){
+                $("#showCarousel").modal('show');
+            }
+
+            function addTask(){
+                
+                $("#addTaskModal").modal('hide');
+                var dataArr = $("#taskInputForm").serializeArray();
+                var taskObject = new Object();
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+
+                for(var i in dataArr){
+                    var name = dataArr[i]['name']
+                    var value = dataArr[i]['value']
+                    taskObject[name] = value
+                }
+
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    storageObjectArr = JSON.parse(storageObject)
+                    storageObjectArr.push(taskObject)
+                }
+                else{
+                    storageObjectArr.push(taskObject)
+                }
+                localStorage.setItem('taskStorage',JSON.stringify(storageObjectArr))
+
+               
+                
+                createHtmlfromStorage();
+                loader();
+                $("#taskInputForm").trigger('reset')
+            }
+
+            function createHtmlfromStorage(){
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                var storageObjectArr = JSON.parse(storageObject)
+                var html = '';
+                
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    if(storageObjectArr && storageObjectArr.length > 0){
+                        for(let i in storageObjectArr){
+                        var date = new Date(storageObjectArr[i]['taskETA'])
+                        html = html + '<tr id='+parseInt(i)+'write'+' style="text-decoration: none;">'
+                       + '<td id='+parseInt(i)+'write2'+'>'+ (parseInt(i)+1) +'</td>'
+                       + '<td>'+ storageObjectArr[i]['taskDescription'] +'</td>'
+                       + '<td>'+ storageObjectArr[i]['taskResponsiblePerson'] +'</td>'
+                       + '<td>'+ date.toUTCString() +'</td>'
+                       + '<td><i class="bi bi-check-circle-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark as Done" onclick="markAsDone('+i+')"></i>'
+                       + '<i class="bi bi-pencil-square" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Edit Task" onclick="editTask('+i+')"></i>'
+                       + '<i id='+i+' class="bi bi-star-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Mark As Important" onclick="impTask('+i+')" style="cursor: pointer; color: wheat;"></i>'
+                       + '<i class="bi bi-trash-fill" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Remove Task" onclick="removeTask('+i+')"></i>'
+                       + '</td></tr>'
+                        }
+                    }
+                    else{
+                        html = '<tr><td colspan="5">No Tasks Added Yet</td></tr>'
+                    }
+                }
+                else{
+                        html = '<tr><td colspan="5">No Tasks Added Yet</td></tr>'
+                }
+                $("#taskTableBody").html(html)
+
+              
+                
+            }
+
+            function removeTask(index){
+                
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    storageObjectArr = JSON.parse(storageObject);
+                    var ar1 = storageObjectArr.slice(0,parseInt(index));
+                    var ar2 = storageObjectArr.slice((parseInt(index)+1));
+                    storageObjectArr = ar1.concat(ar2);
+                }
+                
+                localStorage.setItem('taskStorage',JSON.stringify(storageObjectArr));
+                var attriObj = new Object()
+                var attriArr = []
+                attriObj = localStorage.getItem('impData');
+                attriArr = JSON.parse(attriObj)
+                var arr1 = attriArr.slice(0,parseInt(index))
+                var arr2 = attriArr.slice((parseInt(index)+1))
+                attriArr = arr1.concat(arr2)
+                localStorage.setItem("impData",JSON.stringify(attriArr))
+                
+               
+                var attriObj2 = new Object()
+                var attriArr2 = []
+                attriObj2 = localStorage.getItem('impData2');
+                attriArr2 = JSON.parse(attriObj2)
+                var arr12 = attriArr2.slice(0,parseInt(index))
+                var arr22 = attriArr2.slice((parseInt(index)+1))
+                attriArr2 = arr12.concat(arr22)
+                localStorage.setItem("impData2",JSON.stringify(attriArr2))
+                createHtmlfromStorage();
+                loader();
+            }
+
+            function editTask(index){
+                
+                var storageObject = localStorage.getItem('taskStorage');
+                var storageObjectArr = [];
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    storageObjectArr = JSON.parse(storageObject);
+                    $("#editTaskTextArea").val(storageObjectArr[index]['taskDescription']);
+                    $("#editResponsiblePerson").val(storageObjectArr[index]['taskResponsiblePerson']);
+                    $("#editETA").val(storageObjectArr[index]['taskETA']);
+                    $("#editIndex").val(index);
+                    $("#updateTaskModal").modal('show');
+                }
+            }
+
+            function updateTask(){
+                $("#updateTaskModal").modal('hide');
+                var dataArr = $("#taskUpdateForm").serializeArray();
+                var taskObject = new Object();
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+
+                for(var i in dataArr){
+                    var name = dataArr[i]['name']
+                    var value = dataArr[i]['value']
+                    taskObject[name] = value
+                }
+                
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    storageObjectArr = JSON.parse(storageObject)
+                    storageObjectArr[taskObject['taskIndex']] = taskObject
+                }
+                
+                localStorage.setItem('taskStorage',JSON.stringify(storageObjectArr))
+                createHtmlfromStorage();
+                loader();
+            }
+
+            function clearAll(){
+                
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    storageObjectArr = [];
+                }
+                
+                localStorage.setItem('taskStorage',JSON.stringify(storageObjectArr));
+                
+                var attriArr = []
+                localStorage.setItem("impData",JSON.stringify(attriArr))
+                localStorage.setItem("impData2",JSON.stringify(attriArr))
+                createHtmlfromStorage();
+                loader();
+            }
+
+            function doneAll(){
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                storageObjectArr = JSON.parse(storageObject)
+                var attriObj = new Object()
+                var attriArr2 = []
+                for(var i=0;i<storageObjectArr.length;i=i+1){
+                    attriArr2[i]=1
+                }
+                localStorage.setItem('impData2',JSON.stringify(attriArr2))
+                createHtmlfromStorage();
+                loader();
+            }
+
+           function impTask(index){
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                storageObjectArr = JSON.parse(storageObject)
+                const imp = document.getElementById(index);
+                var attriObj = new Object()
+                var attriArr = []
+                for(var i=0;i<storageObjectArr.length;i=i+1){
+                    attriArr[i]=0
+                }
+                attriObj = localStorage.getItem('impData');
+                if(attriObj != null && attriObj != undefined && attriObj != ''){
+                attriArr = JSON.parse(attriObj)
+                }
+                if(imp.style.color == "wheat"){
+                   imp.style.color = "gold"
+                    attriArr[index] = 1
+                }
+                else{
+                   imp.style.color = "wheat"
+                    attriArr[index] = 0
+                }
+              
+                localStorage.setItem("impData",JSON.stringify(attriArr))    
+           }
+
+           
+
+           function markAsDone(index){
+                var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                storageObjectArr = JSON.parse(storageObject)
+                const imp = document.getElementById(parseInt(index)+"write");
+                var attriObj2 = new Object()
+                var attriArr2 = []
+                for(var i=0;i<storageObjectArr.length;i=i+1){
+                    attriArr2[i]=0
+                }
+                attriObj2 = localStorage.getItem('impData2');
+                if(attriObj2 != null && attriObj2 != undefined && attriObj2 != ''){
+                attriArr2 = JSON.parse(attriObj2)
+                } 
+                if(imp.style.textDecoration == "none"){
+                   imp.style.textDecoration = "line-through"
+                    attriArr2[index] = 1
+                }
+                else{
+                   imp.style.textDecoration = "none"
+                    attriArr2[index] = 0
+                }
+                localStorage.setItem("impData2",JSON.stringify(attriArr2))
+           }
+
+           function loader(){
+                var attriObj = new Object()
+                var attriArr = []
+                attriObj = localStorage.getItem('impData');
+                attriArr = JSON.parse(attriObj)
+                
+                for(var i in attriArr){
+                    if(attriArr[i]==1){
+                        const imp = document.getElementById(i)
+                        imp.style.color = "gold"
+                    }
+                }
+
+                var attriObj2 = new Object()
+                var attriArr2 = []
+                attriObj2 = localStorage.getItem('impData2');
+                attriArr2 = JSON.parse(attriObj2)
+                
+                for(var i in attriArr2){
+                    if(attriArr2[i]==1){
+                        const imp = document.getElementById(parseInt(i)+"write")
+                        imp.style.textDecoration = "line-through"
+                    }
+                }
+           }
+
+           function Calendar(){
+            
+            const date = document.getElementById("date")
+            const day = document.getElementById("day")
+            const month = document.getElementById("mon")
+            const year = document.getElementById("year")
+            const hrs = document.getElementById("hrs")
+            const min = document.getElementById("min")
+            const sec = document.getElementById("sec")
+            const week = ["SUN","MON","TUE","WED","THU","FRI","SAT"]
+            const mont = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"]
+
+            setInterval(()=>{
+                const full_date = new Date()
+            date.innerHTML = (full_date.getDate()<10?'0':'')+full_date.getDate()
+            day.innerHTML = week[full_date.getDay()]
+            month.innerHTML = mont[full_date.getMonth()]
+            year.innerHTML = full_date.getFullYear()
+            hrs.innerHTML = (full_date.getHours()<10?'0':'')+full_date.getHours()
+            min.innerHTML = (full_date.getMinutes()<10?'0':'')+full_date.getMinutes()
+            sec.innerHTML = (full_date.getSeconds()<10?'0':'')+full_date.getSeconds()
+
+            var storageObjectArr = [];
+                var storageObject = localStorage.getItem('taskStorage');
+                if(storageObject != null && storageObject != undefined && storageObject != ''){
+                    var storageObjectArr = JSON.parse(storageObject)
+                    if(storageObjectArr && storageObjectArr.length > 0){
+                        for(let i in storageObjectArr){
+                        const dat = new Date(storageObjectArr[i]['taskETA'])
+                        if(full_date.getTime() > dat.getTime()){
+                           const imp = document.getElementById(parseInt(i)+"write2");
+                           imp.style.backgroundColor = "blue"
+                           imp.style.color = "white"
+                        }
+                        }
+                    }
+                }
+            },1000)
+            
+               
+           }
+
+        
+           
+        </script>
+    </body>
+</html>
